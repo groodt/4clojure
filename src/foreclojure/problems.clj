@@ -146,6 +146,19 @@
                         "/images/empty-sq.png")}]]])
       problems))])
 
+
+(def-page problem-submission-page []
+  [:div.instructions
+    [:p "Thanks for choosing to submit a problem. Please make sure that you own the rights to the code you are submitting and that you wouldn't
+        mind having us use the code as a 4clojure problem."]
+    [:b "Enter your problem here:" [:br]]
+    (form-to [:post "/submit-problem"]
+             (text-area {:id "problem-submission"
+                         :spellcheck "false"}
+                        :code (session/flash-get :code)))
+   ])
+
+
 (defroutes problems-routes
   (GET "/problems" [] (problem-page))
   (GET "/problem/:id" [id] (code-box id))
@@ -156,4 +169,5 @@
                            "http://4clojure.com/problems/rss"
                            (problem-feed 20)))
   (POST "/run-code" {{:strs [id code]} :form-params}
-          (run-code (Integer. id) code)))
+          (run-code (Integer. id) code))
+  (GET "/problems/submit" [] (problem-submission-page)))
